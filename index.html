@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'">
 <title>税の期限</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="審査請求は3か月、取消訴訟は6か月、情報公開の決定は30日。役所への不服申立て・裁判・情報公開の期限（2週間〜1年）と、どのきまりかを、法律の条文から当てる1日5問の学習ゲーム。">
+<meta name="description" content="相続税の申告は10か月、更正の請求は5年、赤字の繰越しは10年。税の申告・直す請求・繰越しの期限（1か月〜10年）と、どのきまりかを、法律の条文から当てる1日5問の学習ゲーム。">
 <meta name="theme-color" content="#f3efe4">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="税の期限">
@@ -459,9 +459,9 @@ html.a11y-say body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))!i
 <dialog id="howto" aria-labelledby="howto-t">
   <h2 id="howto-t">遊び方</h2>
   <ol>
-    <li>役所の処分への審査請求・取消訴訟・情報公開などの場面が出ます。</li>
-    <li>その期限（2週間〜1年）を押します。</li>
-    <li>正解したら、どのきまりか（不服申立て／裁判と意見公募／情報の開示）を3つから選びます。</li>
+    <li>相続税の申告・更正の請求・赤字の繰越しなどの場面が出ます。</li>
+    <li>その期限（1か月〜10年）を押します。</li>
+    <li>正解したら、どのきまりか（申告の期限／直す・不服／繰越し・さかのぼり）を3つから選びます。</li>
     <li>最後に、わけと資料の出どころが出ます。</li>
   </ol>
   <p>自信があるときは、答える前に「🎯 自信あり？」を押します（押さなくても遊べます）。</p>
@@ -502,7 +502,7 @@ const TIPS = [
   ["更正の請求は5年", "税を多く申告したときに直してもらう更正の請求は、申告期限から5年以内です（国税通則法 第23条）。"],
   ["不服申立ては3か月", "税の処分に不服なときは、通知を受けた日の翌日から3か月以内に申し立てます（国税通則法 第77条）。"],
   ["個人の赤字の繰越しは3年", "青色申告の人の赤字は、次の年から3年のあいだ所得から引けます（所得税法 第70条）。"],
-  ["相続前の贈与は7年", "亡くなる前7年以内にもらった財産は、相続税の計算で足します（相続税法 第19条）。"],
+  ["相続前の贈与は7年", "亡くなる前7年以内にもらった財産は、相続税の計算で足します（相続税法 第19条。2030年までの相続は経過措置で短くなります）。"],
 ];
 const tipOf = (k) => TIPS[((dayNo(k) - 1) % TIPS.length + TIPS.length) % TIPS.length];
 
@@ -644,7 +644,7 @@ function home() {
   const st = streak(s.days), rv = Depth.count();
   app.innerHTML = `
     <h1 class="title">税の<span>期限</span></h1>
-    <p class="lead" data-a11y-say>その期限、どれだけ？<br>審査請求・取消訴訟・情報公開の期限を当てる1日5問。</p>
+    <p class="lead" data-a11y-say>その期限、どれだけ？<br>相続税の申告・更正の請求・繰越しの期限を当てる1日5問。</p>
     <div class="fsrow" role="group" aria-label="文字の大きさ">文字<button data-fs="1" aria-pressed="${fs === 1}" aria-label="文字 ふつう">あ</button><button data-fs="2" aria-pressed="${fs === 2}" aria-label="文字 大きい" style="font-size:1.15em">あ</button><button data-fs="3" aria-pressed="${fs === 3}" aria-label="文字 とても大きい" style="font-size:1.3em">あ</button></div>
     <div class="tip" id="tip"><b>今日のきほん：${tip[0]}</b><br>${tip[1]}</div>
     ${done ? `<div class="share">今日の結果　${done.m.map(sq).join("")}</div>` : ""}
@@ -793,7 +793,7 @@ function paintWhy() {
 function chooseWhy(x) {
   if (cur.done || cur.step !== 2) return;
   if (!same(load().runs[MODE])) { toast("別の画面で先に進んでいます"); return play(); }
-  if (x !== cur.P.grp) { if (cur.w2.includes(x)) return; buzz(40); cur.w2.push(x); keep(); paintWhy(); $("msg").className = "msg bad"; $("msg").textContent = "✕ ちがいます。審査請求・再調査・再審査は不服申立て、取消訴訟とパブリックコメントは裁判と意見公募、文書や個人情報を見せる決定は情報の開示です。もう一度どうぞ。"; return; }
+  if (x !== cur.P.grp) { if (cur.w2.includes(x)) return; buzz(40); cur.w2.push(x); keep(); paintWhy(); $("msg").className = "msg bad"; $("msg").textContent = "✕ ちがいます。申告書を出す期限は申告の期限、払いすぎを直す請求や不服の申立ては直す・不服、赤字の繰越しや贈与・時効などさかのぼる年数は繰越し・さかのぼりです。もう一度どうぞ。"; return; }
   const b = document.querySelector(`.why button[data-g="${x}"]`); if (b) b.classList.add("ok");
   solved();
 }

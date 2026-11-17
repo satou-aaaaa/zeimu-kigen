@@ -111,7 +111,11 @@ check("乱数は sort の比較の中で引かない（ブラウザで引く回�
 check("言い方：「必ず」「絶対」と言い切らない（政令の例外もある）・画像を入れない", !/絶対に|必ず(当て|わか|見分|建て)/.test(html + gen + readme) && !/<img/.test(html));
 { const howto = (html.match(/<dialog id="howto"[\s\S]*?<\/dialog>/) || [""])[0], ab = (html.match(/function about\(\)[\s\S]*?\n}/) || [""])[0], dis = (t) => /代わりではありません/.test(t) && /国税庁の案内、専門家に確かめてください/.test(t) && /条文を、?短く(やさしく)?言いかえ/.test(t);
   check("言い方：遊び方・「このゲームについて」・README のどれにも、条文を言いかえた文であること・公式の情報の代わりではないこと・実際は国税庁の案内、専門家に確かめることがある", dis(howto) && dis(ab) && dis(readme), `遊び方 ${dis(howto)}・について ${dis(ab)}・README ${dis(readme)}`); }
-check("写し元（行政の期限・地方自治の日数・国会の日数・借地・借家の期間・裁判の期限・会社の任期と期限・何年とっておく？・特許は何年？・免許は何歳から？・駐車禁止は何m？・届け出いつまで？・危険物の類あて・用途地域あて・岩石系統分け・SDGsの目標あて・震度よみ・憲法のしくみ）の言葉が残っていない（共通部品 store の中は除く・game-dev.md A 手順5）", !/岩石|ganseki|GNK|gnk|産総研|地質|gsj|火成|堆積|変成|SDG|ターゲット|仮訳|外務省|アジェンダ|震度|気象庁|解説表|地震|jma\\.go|shd|SHD|ようす帳|kps|KPS|用途地域|都市計画|建築基準|youto|yto|YTO|危険物|消防法|第何類|固体|液体|品名|kikenbutsu|kbr|KBR|届け出|市区町村|todokede|tdk|TDK|駐車|停車|chusha|ckr|CKR|場所帳|免許|menkyo|mkn|MKN|道路交通法|何歳|特許|商標|意匠|tokkyo|tkk|TKK|期間帳|期限帳|保存期間|hozon|hzk|HZK|カルテ|処方|会社の任期|会社帳|kaisha|ksk|KSK|取締役|監査役|株主|裁判の期限|saiban-kigen|sbk|SBK|刑事|民事|刑事訴訟|民事訴訟|逮捕|勾留|控訴|手続き帳|借地|借家|賃貸|shakuchi|sks|SKS|民法|国会|kokkai|kkn|KKN|衆議院|参議院|憲法|地方自治|chiho|chj|CHJ|自治帳|住民監査|議会/.test(html.replace(/<!-- store:begin[\s\S]*?<!-- store:end -->/, "") + gen + readme));
+check("写し元（行政の期限・地方自治の日数・国会の日数・借地・借家の期間・裁判の期限・会社の任期と期限・何年とっておく？・特許は何年？・免許は何歳から？・駐車禁止は何m？・届け出いつまで？・危険物の類あて・用途地域あて・岩石系統分け・SDGsの目標あて・震度よみ・憲法のしくみ）の言葉が残っていない（共通部品 store の中は除く・game-dev.md A 手順5）", !/岩石|ganseki|GNK|gnk|産総研|地質|gsj|火成|堆積|変成|SDG|ターゲット|仮訳|外務省|アジェンダ|震度|気象庁|解説表|地震|jma\\.go|shd|SHD|ようす帳|kps|KPS|用途地域|都市計画|建築基準|youto|yto|YTO|危険物|消防法|第何類|固体|液体|品名|kikenbutsu|kbr|KBR|届け出|市区町村|todokede|tdk|TDK|駐車|停車|chusha|ckr|CKR|場所帳|免許|menkyo|mkn|MKN|道路交通法|何歳|特許|商標|意匠|tokkyo|tkk|TKK|期間帳|期限帳|保存期間|hozon|hzk|HZK|カルテ|処方|会社の任期|会社帳|kaisha|ksk|KSK|取締役|監査役|株主|裁判の期限|saiban-kigen|sbk|SBK|刑事|民事|刑事訴訟|民事訴訟|逮捕|勾留|控訴|手続き帳|借地|借家|賃貸|shakuchi|sks|SKS|民法|国会|kokkai|kkn|KKN|衆議院|参議院|憲法|地方自治|chiho|chj|CHJ|自治帳|住民監査|議会|行政の期限|gyosei|gsk|GSK|行政帳|取消訴訟|情報公開|パブリックコメント|意見公募|情報の開示/.test(html.replace(/<!-- store:begin[\s\S]*?<!-- store:end -->/, "") + gen + readme));
+// 遊び方・説明・まちがいの案内は、ゲームごとに手で書く所。写し元の文のまま残らないよう、このゲームのきまりの名前と期限の幅で書いてあるかを見る（2026-11-18 incidents/2026-11-18-game-copy-hand-written-text.md）
+{ const names = Object.values(G.GROUPS).map((g) => g.name), rng = `${G.LEVELS[0]}〜${G.LEVELS[G.LEVELS.length - 1]}`;
+  const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "", bad = (html.match(/"✕ ちがいます。([^"]*)"/) || [])[1] || "";
+  check("遊び方・説明・まちがいの案内が、このゲームのきまりの名前と期限の幅で書いてある（写し元の文が残っていない）", html.includes(`どのきまりか（${names.join("／")}）`) && html.includes(`その期限（${rng}）`) && desc.includes(`（${rng}）`) && names.every((n) => bad.includes(n)), `desc=${desc.slice(0, 40)} bad=${bad.slice(0, 40)}`); }
 check("画面にお笑いの言葉を入れない（本物っぽく）", !/お笑い|ギャグ|ツッコミ|なんでやねん|（うそ）/.test(html + gen));
 check("引き継ぎ：transfer.js をゲームの script より前に、このゲームの記録のキー（記録・文字・復習）だけで読む・depth.js も前に読む", /<script src="transfer\.js" data-game="zeimu-kigen" data-keys="zsk-v1,zsk-fs,zsk-depth"><\/script>\s*<script src="depth\.js" data-game="zeimu-kigen" data-key="zsk-depth"><\/script>\s*<\/head>/.test(html) && html.indexOf('src="transfer.js"') < html.indexOf('src="data.js"') && /data-hk/.test(html) && existsSync(path.join(root, "transfer.js")));
 check("好きなだけ遊べる：チケット・回数の上限・🔒で開くモードを入れない（game-dev.md F1・F2）", !/🎫|チケット|すると開く|🔒/.test(html) && !/\blife\b|ELIFE/.test(html));
@@ -417,7 +421,7 @@ try {
     const wg = await q.evaluate(() => Object.keys(__nm.G.GROUPS).find((x) => x !== __nm.cur().P.grp));
     await q.click(`.why button[data-g="${wg}"]`);
     check("2段目でまちがえると ✕ ちがう（破線）・もう一度選べる", await q.locator(".why button.ng").count() === 1 && (await q.textContent("#msg")).includes("✕"));
-    check("2段目でまちがえると「文書や個人情報を見せる決定は情報の開示」と出る", (await q.textContent("#msg")).includes("文書や個人情報を見せる決定は情報の開示"));
+    { const m = await q.textContent("#msg"); check("2段目でまちがえると、このゲームの3つのきまりの見分け方が出る", Object.values(G.GROUPS).every((g) => m.includes(g.name)), m); }
     await q.click("#hint");
     const ng1 = await q.locator(".why button:disabled").count();
     check("2段目のヒントは、まちがえた系統とは別のちがう系統を消す（★を使って何も消えないことが無い。2026-11-11 CodeRabbit）", ng1 === 2 && await q.locator(".why button:not(:disabled)").count() === 1, ng1);
