@@ -127,7 +127,10 @@ check("好きなだけ遊べる：チケット・回数の上限・🔒で開く
 }
 { const fy = readFileSync(path.join(root, ".github/ISSUE_TEMPLATE/feedback.yml"), "utf8");
   check("感想フォームの name が3字以上（2字だとフォームが出ない。shared-workflows incidents/2026-11-05-feedback-form-not-shown.md）", [...((fy.match(/^name:\s*(.+)$/m) || [])[1] || "").trim()].length >= 3);
-  check("感想フォームは名前・メールを聞かない", /id: fun/.test(fy) && !/id: (name|email|mail)/.test(fy) && /labels: \["感想"\]/.test(fy)); }
+  check("感想フォームは名前・メールを聞かない", /id: fun/.test(fy) && !/id: (name|email|mail)/.test(fy) && /labels: \["感想"\]/.test(fy));
+  // 感想フォームの入力例と manifest の説明も手で書く所。写し元の文が残らないよう、このゲームの種類の名前と OGP の説明で書いてあるかを見る（2026-11-18 CodeRabbit kazoku-kigen#1）
+  const ex = (fy.match(/id: good[\s\S]*?placeholder: (.+)/) || [])[1] || "", mfd = JSON.parse(readFileSync(path.join(root, "manifest.webmanifest"), "utf8")).description || "", ogd = (html.match(/<meta property="og:description" content="([^"]+)"/) || [])[1];
+  check("感想フォームの入力例と manifest の説明が、このゲームの文で書いてある（写し元の文が残っていない）", G.KINDS.some((k) => ex.includes(k.name)) && mfd === ogd, `入力例=${ex}・説明=${mfd}`); }
 check("README の URL のすぐ後ろに全角の字を続けない（Link check が URL の一部と読む）", !/https?:\/\/[\x21-\x7e]*[^\x00-\x7f]/.test(readme.replace(/\]\(https?:\/\/[^)\s]+\)/g, "").replace(/<https?:\/\/[^>\s]+>/g, "")));
 { const sw = readFileSync(path.join(root, "sw.js"), "utf8"), mf = JSON.parse(readFileSync(path.join(root, "manifest.webmanifest"), "utf8"));
   const shell = JSON.parse(sw.match(/SHELL = (\[[^\]]+\])/)[1]);
